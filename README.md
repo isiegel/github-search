@@ -1,5 +1,7 @@
 # GitHub User Search
 
+**Live Demo:** [https://github-search-two-xi.vercel.app/](https://github-search-two-xi.vercel.app/)
+
 A small React + TypeScript app for searching GitHub users from the browser with the public GitHub Search API.
 
 ## What It Does
