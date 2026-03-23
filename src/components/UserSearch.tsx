@@ -1,0 +1,50 @@
+import { useState } from 'react';
+import useGitHubSearch from '../hooks/useGitHubSearch';
+import UserList from './UserList';
+
+const UserSearch = () => {
+  const [query, setQuery] = useState('');
+  const [hasSearched, setHasSearched] = useState(false);
+  const { users, loading, error, searchUsers } = useGitHubSearch();
+
+  const handleSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (query.trim()) {
+      setHasSearched(true);
+      searchUsers(query);
+    }
+  };
+
+  return (
+    <div>
+      <h2 className="mt-4">GitHub User Search</h2>
+      <p className="text-gray-600 text-center p-2">
+        Search for GitHub users and view their profiles
+      </p>
+      <form onSubmit={handleSearch} className="mt-6">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter GitHub username"
+          className="px-4 py-2"
+        />
+        <button
+          type="submit"
+          className="ml-2 px-4 py-2 bg-(--accent) text-white font-medium rounded hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+          disabled={loading}
+        >
+          Search
+        </button>
+      </form>
+      <UserList
+        users={users}
+        loading={loading}
+        error={error}
+        hasSearched={hasSearched}
+      />
+    </div>
+  );
+};
+
+export default UserSearch;
