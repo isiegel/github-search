@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useDebounce from '../hooks/useDebounce';
 import useGitHubSearch from '../hooks/useGitHubSearch';
 import UserList from './UserList';
 
 const UserSearch = () => {
   const [query, setQuery] = useState('');
+  const [lastQuery, setLastQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
   const [hasSearched, setHasSearched] = useState(false);
   const { users, loading, error, searchUsers, clearSearch } = useGitHubSearch();
+
+  useEffect(() => {
+    if (debouncedQuery.trim()) {
+      setHasSearched(true);
+      setLastQuery(debouncedQuery);
+      searchUsers(debouncedQuery);
+    } else {
+      setHasSearched(false);
+      clearSearch();
+    }
+  }, [debouncedQuery, searchUsers, clearSearch]);
 
   const handleClear = () => {
     setQuery('');
@@ -17,7 +31,7 @@ const UserSearch = () => {
     e.preventDefault();
     if (query.trim()) {
       setHasSearched(true);
-      searchUsers(query);
+      searchUsers(debouncedQuery);
     }
   };
 

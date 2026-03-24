@@ -12,6 +12,8 @@ interface GitHubUser {
   public_repos: number;
   followers_url: string;
   following_url: string;
+  followers: number;
+  following: number;
   type: string;
 }
 

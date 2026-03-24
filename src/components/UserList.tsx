@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { GitHubUser } from '../types/github';
+import UserDetails from './UserDetails';
 
 interface UserListProps {
   users: GitHubUser[];
@@ -8,6 +10,8 @@ interface UserListProps {
 }
 
 function UserList({ users, loading, error, hasSearched }: UserListProps) {
+  const [selectedUser, setSelectedUser] = useState<GitHubUser | null>(null);
+
   if (loading) {
     return <p className="pt-6">Loading...</p>;
   }
@@ -37,6 +41,7 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
         {users.map((user) => (
           <div
             key={user.id}
+            onClick={() => setSelectedUser(user)}
             className="mt-4 border border-gray-200 rounded-lg p-4 hover:shadow-lg transition hover:cursor-pointer"
           >
             <img
@@ -58,6 +63,12 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
           </div>
         ))}
       </div>
+      {selectedUser && (
+        <UserDetails
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </>
   );
 }
