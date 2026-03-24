@@ -25,7 +25,12 @@ const useGitHubSearch = () => {
     }
   }, []);
 
-  return { users, loading, error, searchUsers };
+  const clearSearch = useCallback(() => {
+    setUsers([]);
+    setError(null);
+  }, []);
+
+  return { users, loading, error, searchUsers, clearSearch };
 }
 
 export default useGitHubSearch;

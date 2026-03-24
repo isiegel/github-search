@@ -17,7 +17,7 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
   }
 
   if (!hasSearched) {
-    return <p className="pt-6">Enter a GitHub username above to search.</p>;
+    return <p className="pt-6">⬆️ Enter a GitHub username above to search.</p>;
   }
 
   if (users.length === 0) {

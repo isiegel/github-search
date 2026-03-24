@@ -5,7 +5,13 @@ import UserList from './UserList';
 const UserSearch = () => {
   const [query, setQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
-  const { users, loading, error, searchUsers } = useGitHubSearch();
+  const { users, loading, error, searchUsers, clearSearch } = useGitHubSearch();
+
+  const handleClear = () => {
+    setQuery('');
+    setHasSearched(false);
+    clearSearch();
+  };
 
   const handleSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,13 +28,25 @@ const UserSearch = () => {
         Search for GitHub users and view their profiles
       </p>
       <form onSubmit={handleSearch} className="mt-6">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Enter GitHub username"
-          className="px-4 py-2"
-        />
+        <div className="relative inline-block">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Enter GitHub username"
+            className="px-4 py-2 pr-8"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
         <button
           type="submit"
           className="ml-2 px-4 py-2 bg-(--accent) text-white font-medium rounded hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
