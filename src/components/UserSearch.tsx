@@ -47,7 +47,7 @@ const UserSearch = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter GitHub username"
+            placeholder={lastQuery || "Enter GitHub username"}
             className="px-4 py-2 pr-8"
           />
           {query && (
