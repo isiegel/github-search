@@ -42,7 +42,7 @@ function UserDetails({ user, onClose }: UserDetailsProps) {
       >
         <button
           onClick={onClose}
-          className="float-right text-gray-500 hover:text-gray-700 text-2xl"
+          className="float-right text-gray-500 hover:text-gray-700 text-2xl cursor-pointer"
         >
           ×
         </button>
