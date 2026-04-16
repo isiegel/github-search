@@ -29,9 +29,11 @@ const UserSearch = () => {
 
   const handleSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (query.trim()) {
+    const trimmedQuery = query.trim();
+    if (trimmedQuery) {
       setHasSearched(true);
-      searchUsers(debouncedQuery);
+      setLastQuery(trimmedQuery);
+      searchUsers(trimmedQuery);
     }
   };
 
