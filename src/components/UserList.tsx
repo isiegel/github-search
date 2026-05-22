@@ -123,11 +123,9 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
               loading="lazy"
               className="w-20 h-20 rounded-full mb-3 ring-2 ring-offset-2 transition-transform group-hover:scale-105"
               style={{
-                // @ts-expect-error - CSS custom property
                 '--tw-ring-color': 'var(--accent)',
-                // @ts-expect-error - CSS custom property
                 '--tw-ring-offset-color': 'var(--bg)',
-              }}
+              } as React.CSSProperties}
             />
             <h3
               className="text-base font-semibold relative"
