@@ -13,20 +13,76 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
   const [selectedUser, setSelectedUser] = useState<GitHubUser | null>(null);
 
   if (loading) {
-    return <p className="pt-6">Loading...</p>;
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-xl p-5 flex flex-col items-center"
+            style={{
+              background: 'var(--social-bg)',
+              border: '1px solid var(--border)',
+            }}
+          >
+            <div
+              className="w-20 h-20 rounded-full mb-3"
+              style={{
+                background:
+                  'linear-gradient(90deg, var(--border) 0px, var(--code-bg) 200px, var(--border) 400px)',
+                backgroundSize: '800px 100%',
+                animation: 'shimmer 1.4s linear infinite',
+              }}
+            />
+            <div
+              className="h-4 w-24 rounded mb-2"
+              style={{
+                background:
+                  'linear-gradient(90deg, var(--border) 0px, var(--code-bg) 200px, var(--border) 400px)',
+                backgroundSize: '800px 100%',
+                animation: 'shimmer 1.4s linear infinite',
+              }}
+            />
+            <div
+              className="h-3 w-20 rounded"
+              style={{
+                background:
+                  'linear-gradient(90deg, var(--border) 0px, var(--code-bg) 200px, var(--border) 400px)',
+                backgroundSize: '800px 100%',
+                animation: 'shimmer 1.4s linear infinite',
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="pt-6 text-red-500">{error}</p>;
+    return (
+      <div
+        className="mt-8 mx-auto max-w-md rounded-lg p-4 text-center"
+        style={{
+          background: 'rgba(239, 68, 68, 0.08)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          color: '#dc2626',
+        }}
+      >
+        {error}
+      </div>
+    );
   }
 
   if (!hasSearched) {
-    return <p className="pt-6">⬆️ Enter a GitHub username above to search.</p>;
+    return (
+      <p className="pt-5 opacity-70">
+        ⬆️ Enter a GitHub username above to search.
+      </p>
+    );
   }
 
   if (users.length === 0) {
     return (
-      <p className="pt-6">
+      <p className="mt-10 opacity-70">
         No users found. Try searching for a different username.
       </p>
     );
@@ -34,33 +90,58 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
 
   return (
     <>
-      <span className="mt-8 text-l text-gray-800 inline-block">
-        Results for <strong>{users[0].login}</strong>:
-      </span>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 m-4 mt-0">
-        {users.map((user) => (
-          <div
+      <div
+        className="mt-10 mb-2 text-sm opacity-70"
+        style={{ color: 'var(--text)' }}
+      >
+        Results for{' '}
+        <strong style={{ color: 'var(--text-h)' }}>{users[0].login}</strong>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
+        {users.map((user, i) => (
+          <button
+            type="button"
             key={user.id}
             onClick={() => setSelectedUser(user)}
-            className="mt-4 border border-gray-200 rounded-lg p-4 hover:shadow-lg transition hover:cursor-pointer"
+            className="group relative rounded-xl p-5 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg overflow-hidden"
+            style={{
+              background: 'var(--social-bg)',
+              border: '1px solid var(--border)',
+              animation: `fade-in-up 0.35s ease-out ${i * 30}ms both`,
+            }}
           >
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(circle at top, var(--accent-bg), transparent 70%)',
+              }}
+            />
             <img
               src={user.avatar_url}
               alt={user.login}
-              className="w-20 h-20 rounded-full mx-auto mb-3"
+              loading="lazy"
+              className="w-20 h-20 rounded-full mb-3 ring-2 ring-offset-2 transition-transform group-hover:scale-105"
+              style={{
+                // @ts-expect-error - CSS custom property
+                '--tw-ring-color': 'var(--accent)',
+                // @ts-expect-error - CSS custom property
+                '--tw-ring-offset-color': 'var(--bg)',
+              }}
             />
-            <h3 className="text-lg font-semibold text-center text-gray-800">
+            <h3
+              className="text-base font-semibold relative"
+              style={{ color: 'var(--text-h)' }}
+            >
               {user.login}
             </h3>
-            <a
-              href={user.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 text-sm text-center block mt-2 hover:underline"
+            <span
+              className="text-xs mt-2 opacity-60 group-hover:opacity-100 transition-opacity relative"
+              style={{ color: 'var(--accent)' }}
             >
-              View Profile →
-            </a>
-          </div>
+              View details →
+            </span>
+          </button>
         ))}
       </div>
       {selectedUser && (
