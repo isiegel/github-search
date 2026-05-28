@@ -9,6 +9,19 @@ interface UserDetailsProps {
 function UserDetails({ user, onClose }: UserDetailsProps) {
   const [userDetails, setUser] = useState<GitHubUser | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const blogUrl = userDetails?.blog
+    ? userDetails.blog.startsWith('http')
+      ? userDetails.blog
+      : `https://${userDetails.blog}`
+    : null;
+  const joinedDate = userDetails?.created_at
+    ? new Date(userDetails.created_at).toLocaleDateString(undefined, {
+        month: 'short',
+        year: 'numeric',
+      })
+    : null;
+
   useEffect(() => {
     fetch(`https://api.github.com/users/${user.login}`)
       .then((res) => res.json())
@@ -60,7 +73,7 @@ function UserDetails({ user, onClose }: UserDetailsProps) {
       onClick={onClose}
     >
       <div
-        className="rounded-2xl p-7 max-w-md w-full relative"
+        className="rounded-[28px] p-7 max-w-lg w-full relative profile-modal"
         style={{
           background: 'var(--bg)',
           border: '1px solid var(--border)',
@@ -79,6 +92,16 @@ function UserDetails({ user, onClose }: UserDetailsProps) {
         </button>
 
         <div className="flex flex-col items-center">
+          <div
+            className="mb-4 rounded-full px-3 py-1 text-xs font-medium tracking-[0.12em] uppercase"
+            style={{
+              background: 'var(--chip-bg)',
+              border: '1px solid var(--border)',
+              color: 'var(--text)',
+            }}
+          >
+            {userDetails.type} Profile
+          </div>
           <div
             className="rounded-full p-1"
             style={{
@@ -110,24 +133,56 @@ function UserDetails({ user, onClose }: UserDetailsProps) {
           )}
         </div>
 
+        {(userDetails.company || userDetails.location || blogUrl || joinedDate) && (
+          <div className="mt-5 flex flex-wrap gap-2 justify-center">
+            {userDetails.company && (
+              <span className="profile-chip">
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
+                  <use href="/icons.svg#briefcase-icon" />
+                </svg>
+                {userDetails.company}
+              </span>
+            )}
+            {userDetails.location && (
+              <span className="profile-chip">
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
+                  <use href="/icons.svg#location-icon" />
+                </svg>
+                {userDetails.location}
+              </span>
+            )}
+            {joinedDate && <span className="profile-chip">Joined {joinedDate}</span>}
+            {blogUrl && (
+              <a
+                href={blogUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="profile-chip"
+              >
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
+                  <use href="/icons.svg#link-icon" />
+                </svg>
+                Website
+              </a>
+            )}
+          </div>
+        )}
+
         <div
-          className="grid grid-cols-3 mt-6 rounded-xl overflow-hidden"
-          style={{
-            background: 'var(--social-bg)',
-            border: '1px solid var(--border)',
-          }}
+          className="grid grid-cols-3 mt-6 gap-3"
         >
           {[
             { label: 'Repos', value: userDetails.public_repos },
             { label: 'Followers', value: userDetails.followers },
             { label: 'Following', value: userDetails.following },
-          ].map((stat, i) => (
+          ].map((stat) => (
             <div
               key={stat.label}
-              className="text-center py-3"
-              style={
-                i < 2 ? { borderRight: '1px solid var(--border)' } : undefined
-              }
+              className="text-center py-4 px-2 rounded-2xl"
+              style={{
+                background: 'var(--social-bg)',
+                border: '1px solid var(--border)',
+              }}
             >
               <div
                 className="font-bold text-xl"
@@ -138,6 +193,30 @@ function UserDetails({ user, onClose }: UserDetailsProps) {
               <div className="text-xs opacity-70 mt-0.5">{stat.label}</div>
             </div>
           ))}
+        </div>
+
+        <div
+          className="mt-6 rounded-2xl p-4 text-left"
+          style={{
+            background: 'var(--social-bg)',
+            border: '1px solid var(--border)',
+          }}
+        >
+          <div className="text-xs uppercase tracking-[0.14em] opacity-65" style={{ color: 'var(--text)' }}>
+            Profile Link
+          </div>
+          <a
+            href={userDetails.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-2 text-sm break-all"
+            style={{ color: 'var(--text-h)' }}
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 opacity-70" aria-hidden="true">
+              <use href="/icons.svg#link-icon" />
+            </svg>
+            {userDetails.html_url}
+          </a>
         </div>
 
         <a

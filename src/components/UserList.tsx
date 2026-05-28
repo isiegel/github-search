@@ -7,9 +7,10 @@ interface UserListProps {
   loading: boolean;
   error: string | null;
   hasSearched: boolean;
+  query: string;
 }
 
-function UserList({ users, loading, error, hasSearched }: UserListProps) {
+function UserList({ users, loading, error, hasSearched, query }: UserListProps) {
   const [selectedUser, setSelectedUser] = useState<GitHubUser | null>(null);
 
   if (loading) {
@@ -74,9 +75,22 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
 
   if (!hasSearched) {
     return (
-      <p className="pt-5 opacity-70">
-        ⬆️ Enter a GitHub username above to search.
-      </p>
+      <div className="pt-6 flex items-center justify-center gap-3 opacity-80">
+        <span
+          className="inline-flex items-center justify-center w-10 h-10 rounded-full shadow-sm"
+          style={{
+            background: 'var(--accent-bg)',
+            border: '1px solid var(--accent-border)',
+            color: 'var(--accent)',
+          }}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5">
+            <use href="/icons.svg#arrow-up-icon" />
+          </svg>
+        </span>
+        <p className="m-0">Enter a GitHub username above to search.</p>
+      </div>
     );
   }
 
@@ -90,12 +104,28 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
 
   return (
     <>
-      <div
-        className="mt-10 mb-2 text-sm opacity-70"
-        style={{ color: 'var(--text)' }}
-      >
-        Results for{' '}
-        <strong style={{ color: 'var(--text-h)' }}>{users[0].login}</strong>
+      <div className="mt-10 mb-4 flex flex-wrap items-center justify-between gap-3 text-left">
+        <div>
+          <div
+            className="text-xs uppercase tracking-[0.14em] opacity-65"
+            style={{ color: 'var(--text)' }}
+          >
+            Search Results
+          </div>
+          <div className="mt-1 text-lg font-medium" style={{ color: 'var(--text-h)' }}>
+            {users.length} profiles for “{query || users[0].login}”
+          </div>
+        </div>
+        <div
+          className="rounded-full px-3 py-1 text-xs"
+          style={{
+            background: 'var(--chip-bg)',
+            border: '1px solid var(--border)',
+            color: 'var(--text)',
+          }}
+        >
+          Click a card for profile details
+        </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
         {users.map((user, i) => (
@@ -103,13 +133,33 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
             type="button"
             key={user.id}
             onClick={() => setSelectedUser(user)}
-            className="group relative rounded-xl p-5 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg overflow-hidden"
+            className="group relative rounded-2xl p-5 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1.5 hover:shadow-lg overflow-hidden result-card"
             style={{
               background: 'var(--social-bg)',
               border: '1px solid var(--border)',
               animation: `fade-in-up 0.35s ease-out ${i * 30}ms both`,
             }}
           >
+            <span
+              className="absolute top-3 left-3 rounded-full px-2 py-1 text-[11px] font-medium"
+              style={{
+                background: 'var(--chip-bg)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+              }}
+            >
+              #{i + 1}
+            </span>
+            <span
+              className="absolute top-3 right-3 rounded-full px-2 py-1 text-[11px] font-medium"
+              style={{
+                background: 'var(--accent-bg)',
+                border: '1px solid var(--accent-border)',
+                color: 'var(--accent-strong)',
+              }}
+            >
+              {user.type}
+            </span>
             <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
               style={{
@@ -128,13 +178,19 @@ function UserList({ users, loading, error, hasSearched }: UserListProps) {
               } as React.CSSProperties}
             />
             <h3
-              className="text-base font-semibold relative"
+              className="text-base font-semibold relative mt-1"
               style={{ color: 'var(--text-h)' }}
             >
               {user.login}
             </h3>
+            <div
+              className="relative mt-2 text-xs opacity-65"
+              style={{ color: 'var(--text)' }}
+            >
+              github.com/{user.login}
+            </div>
             <span
-              className="text-xs mt-2 opacity-60 group-hover:opacity-100 transition-opacity relative"
+              className="text-xs mt-4 opacity-60 group-hover:opacity-100 transition-opacity relative"
               style={{ color: 'var(--accent)' }}
             >
               View details →
