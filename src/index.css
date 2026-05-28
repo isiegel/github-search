@@ -8,9 +8,11 @@
     --border: #e5e4e7;
     --code-bg: #f4f3ec;
     --accent: #3bcbff;
+    --accent-strong: #0b7da0;
     --accent-bg: rgba(59, 255, 226, 0.1);
     --accent-border: rgba(170, 59, 255, 0.5);
     --social-bg: rgba(244, 243, 236, 0.5);
+    --chip-bg: rgba(255, 255, 255, 0.72);
     --shadow:
         rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -41,9 +43,11 @@
         --border: #2e303a;
         --code-bg: #1f2028;
         --accent: #c084fc;
+        --accent-strong: #e9d5ff;
         --accent-bg: rgba(192, 132, 252, 0.15);
         --accent-border: rgba(192, 132, 252, 0.5);
         --social-bg: rgba(47, 48, 58, 0.5);
+        --chip-bg: rgba(31, 32, 40, 0.88);
         --shadow:
             rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
     }
@@ -64,6 +68,7 @@
     flex-direction: column;
     box-sizing: border-box;
     position: relative;
+    overflow: clip;
 }
 
 body {
@@ -74,6 +79,19 @@ body {
         var(--bg);
     background-attachment: fixed;
     min-height: 100svh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(to right, rgba(127, 127, 127, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(127, 127, 127, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 85%);
+    opacity: 0.45;
 }
 
 @keyframes fade-in-up {
@@ -126,6 +144,78 @@ h2 {
 
 p {
     margin: 0;
+}
+
+.hero-shell {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-mark {
+    position: relative;
+}
+
+.hero-mark::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border-radius: 24px;
+    background: radial-gradient(circle, var(--accent-bg), transparent 70%);
+    z-index: -1;
+}
+
+.hero-subtitle {
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.search-shell {
+    overflow: hidden;
+}
+
+.search-shell::after {
+    content: "";
+    position: absolute;
+    inset: auto 16px 0 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 180ms ease;
+}
+
+.search-shell:focus-within::after {
+    opacity: 0.8;
+}
+
+.result-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent 28%);
+    pointer-events: none;
+}
+
+.profile-modal::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 120px;
+    border-radius: 28px 28px 0 0;
+    background: linear-gradient(180deg, var(--accent-bg), transparent);
+    pointer-events: none;
+}
+
+.profile-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--chip-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 12px;
+    text-decoration: none;
 }
 
 code,

@@ -15,6 +15,7 @@ interface GitHubUser {
   followers: number;
   following: number;
   type: string;
+  created_at?: string;
 }
 
 interface SearchResponse {
