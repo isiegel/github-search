@@ -85,7 +85,7 @@ function UserList({ users, loading, error, hasSearched, query }: UserListProps) 
           }}
           aria-hidden="true"
         >
-          <svg viewBox="0 0 24 24" className="w-5 h-5">
+          <svg viewBox="0 0 24 24" className="w-5 h-5 rotate-180">
             <use href="/icons.svg#arrow-up-icon" />
           </svg>
         </span>
